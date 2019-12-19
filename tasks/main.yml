@@ -1,0 +1,39 @@
+---
+# tasks file for firewalld
+- name: include os specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
+- name: run OS specific tasks
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "unknown.yml"
+
+- name: ensure firewalld packages are installed
+  package:
+    pkg: "{{ item }}"
+    state: present
+  with_items: "{{ firewalld_packages }}"
+  tags:
+    - software
+
+- name: allow ssh to pass firewall
+  firewalld:
+    service: ssh
+    permanent: true
+    state: enabled
+  notify:
+    - restart firewalld
+
+- name: enable firewalld service
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+  tags:
+    - config

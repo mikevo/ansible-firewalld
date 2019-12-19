@@ -1,0 +1,7 @@
+---
+# defaults file for firewalld
+firewalld_packages:
+  - firewalld
+
+firewalld_other_firewall_packages:
+  - ufw

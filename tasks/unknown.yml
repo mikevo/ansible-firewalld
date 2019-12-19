@@ -1,0 +1,3 @@
+---
+- fail:
+    msg: "This system is not supported by the firewalld role."

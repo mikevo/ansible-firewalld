@@ -1,0 +1,14 @@
+---
+- name: update apt cache
+  apt:
+    update_cache: yes
+
+- name: ensure other firewalld packages are absent
+  package:
+    pkg: "{{ package }}"
+    state: absent
+  with_items: "{{ firewalld_other_firewall_packages }}"
+  loop_control:
+    loop_var: package
+  tags:
+    - software
